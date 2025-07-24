@@ -31,7 +31,7 @@ const BuyerHomePage = ({ onNavigate }) => {
           
           <div className="hidden md:block md:w-1/2">
             <img
-              src="/images/image.jpg.jpg" // Note: Make sure you have this image in your public folder
+              src="/images/image.jpg.jpg" 
               alt="Farmart Visual"
               className="h-full w-full object-cover"
             />
