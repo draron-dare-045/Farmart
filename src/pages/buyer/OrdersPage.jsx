@@ -51,7 +51,7 @@ const BuyerOrdersPage = ({ onNavigate }) => {
       <div className="max-w-5xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-extrabold text-gray-800">My Orders</h1>
-          <Button onClick={() => onNavigate('home')} variant="ghost">
+          <Button onClick={() => onNavigate('/shop')} variant="ghost">
             ← Back to Shop
           </Button>
         </div>
@@ -61,10 +61,7 @@ const BuyerOrdersPage = ({ onNavigate }) => {
             <p className="text-gray-500 text-lg text-center">You have no orders yet.</p>
           ) : (
             orders.map((order) => (
-              <div
-                key={order.id}
-                className="flex justify-between items-center border-b last:border-b-0 pb-4"
-              >
+              <div key={order.id} className="flex justify-between items-center border-b last:border-none pb-4">
                 <div>
                   <p className="text-gray-700"><strong>Order ID:</strong> #{order.id}</p>
                   <p className="text-gray-700"><strong>Status:</strong> <span className="font-semibold">{order.status}</span></p>
