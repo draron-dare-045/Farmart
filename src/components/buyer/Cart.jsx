@@ -15,7 +15,7 @@ const Cart = ({ isOpen, onClose, onNavigate }) => {
       await checkout();
       alert('Order placed successfully!');
       onClose();
-      onNavigate('/my-orders');  
+      onNavigate('/my-orders'); 
     } catch (err) {
       setError(err.message || 'An error occurred.');
     } finally {
