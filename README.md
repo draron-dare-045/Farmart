@@ -1,4 +1,4 @@
-##Farmart##
+##Farmart
 
 Farmart is an e-commerce platform designed to connect farmers directly with buyers, eliminating middlemen to ensure farmers maximize their profits. This application allows farmers to list and manage farm animals for sale, while users can browse, search, filter, and purchase animals seamlessly.
 Table of Contents
