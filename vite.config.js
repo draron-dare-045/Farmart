@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
@@ -21,16 +20,16 @@ export default defineConfig({
               cacheName: 'images-cache',
               expiration: {
                 maxEntries: 60,
-                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+                maxAgeSeconds: 30 * 24 * 60 * 60,
               },
             },
           },
           {
-            urlPattern: "https://farmart-backend-k8f8.onrender.com/api/animals",
+            urlPattern: /^https?:\/\/api\.farmart\.com\/.*$/,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-cache',
-              networkTimeoutSeconds: 10,
+              networkTimeoutSeconds: 10, 
               expiration: {
                 maxEntries: 50,
                 maxAgeSeconds: 24 * 60 * 60, 
