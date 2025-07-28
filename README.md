@@ -55,7 +55,7 @@ cd Farmart
 npm run dev
 ```
 
-The app will run at http://localhost:3000.
+The app will run at http://localhost:5173.
 
 ##Backend Setup
 
