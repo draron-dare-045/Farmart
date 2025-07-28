@@ -1,4 +1,4 @@
-const API_URL = "https://farmart-backend-k8f8.onrender.com"; // Your Django backend URL
+const API_URL = "https://farmart-backend-k8f8.onrender.com"; 
 
 const apiClient = {
     _request: async (method, endpoint, data = null, token = null) => {
@@ -28,9 +28,8 @@ const apiClient = {
         }
     },
 
-    // NEW method for handling file uploads (multipart/form-data)
     postWithFile: async (endpoint, formData, token = null) => {
-        const headers = {}; // Browser will set Content-Type automatically for FormData
+        const headers = {}; 
         if (token) headers['Authorization'] = `Bearer ${token}`;
 
         const config = {
