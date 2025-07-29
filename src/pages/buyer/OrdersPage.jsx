@@ -15,6 +15,7 @@ const BuyerOrdersPage = ({ onNavigate }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selOrder, setSelOrder] = useState(null);
   const [payLoading, setPayLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState({});
 
   useEffect(() => {
     apiClient.get('/api/orders/', tokens.access)
@@ -28,6 +29,19 @@ const BuyerOrdersPage = ({ onNavigate }) => {
     setPhone(user?.phone_number || '254');
     setMpesaError('');
     setModalOpen(true);
+  };
+
+  const handleRemove = async (orderId) => {
+    setDeleteLoading(prev => ({ ...prev, [orderId]: true }));
+    try {
+      await apiClient.delete(`/api/orders/${orderId}/`, tokens.access);
+      setOrders(orders.filter(order => order.id !== orderId));
+      alert('Order removed successfully!');
+    } catch {
+      alert('Failed to remove order.');
+    } finally {
+      setDeleteLoading(prev => ({ ...prev, [orderId]: false }));
+    }
   };
 
   const submitPayment = async () => {
@@ -101,19 +115,34 @@ const BuyerOrdersPage = ({ onNavigate }) => {
                     </span>
                   </p>
                 </div>
-                {order.status === 'CONFIRMED' && (
-                  <Button
-                    onClick={() => handlePay(order)}
-                    variant="secondary"
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white"
-                    disabled={payLoading}
-                  >
-                    {payLoading ? (
-                      <span className="inline-block w-4 h-4 animate-spin border-2 border-t-transparent border-white rounded-full mr-2" />
-                    ) : null}
-                    {payLoading ? 'Processing...' : 'Pay with M‑Pesa'}
-                  </Button>
-                )}
+                <div className="flex items-center space-x-2">
+                  {order.status === 'CONFIRMED' && (
+                    <>
+                      <Button
+                        onClick={() => handlePay(order)}
+                        variant="secondary"
+                        className="bg-yellow-500 hover:bg-yellow-600 text-white"
+                        disabled={payLoading || deleteLoading[order.id]}
+                      >
+                        {payLoading ? (
+                          <span className="inline-block w-4 h-4 animate-spin border-2 border-t-transparent border-white rounded-full mr-2" />
+                        ) : null}
+                        {payLoading ? 'Processing...' : 'Pay with M‑Pesa'}
+                      </Button>
+                      <Button
+                        onClick={() => handleRemove(order.id)}
+                        variant="secondary"
+                        className="bg-red-500 hover:bg-red-600 text-white"
+                        disabled={payLoading || deleteLoading[order.id]}
+                      >
+                        {deleteLoading[order.id] ? (
+                          <span className="inline-block w-4 h-4 animate-spin border-2 border-t-transparent border-white rounded-full mr-2" />
+                        ) : null}
+                        {deleteLoading[order.id] ? 'Removing...' : 'Remove'}
+                      </Button>
+                    </>
+                  )}
+                </div>
               </div>
             ))
           )}
