@@ -1,11 +1,11 @@
-##Farmart##
+1: Farmart
 
 Farmart is an e-commerce platform designed to connect farmers directly with buyers, eliminating middlemen to ensure farmers maximize their profits. This application allows farmers to list and manage farm animals for sale, while users can browse, search, filter, and purchase animals seamlessly.
 Table of Contents
 
 
 
-##Features##
+2: Features
 
 **Farmer Dashboard**: Farmers can register/login, add/edit animals for sale, and confirm/reject orders.
 **User Marketplace**: Users can register/login, browse animals, search by type/breed, filter by breed/age, add to cart, and checkout.
@@ -13,14 +13,14 @@ Table of Contents
 **Secure Authentication**: Role-based access for farmers and users/buyers.
 **State Management**: Efficient state handling using Redux Toolkit.
 
-##Farmer##
+2.1: Farmer
 
 -Register and log in to manage their farm.
 -Add new animals for sale with details (type, breed, age, price, image).
 -Update or edit existing animal listings.
 -Confirm or reject purchase orders from users.
 
-##Buyer##
+2.2: Buyer
 
 -Register and log in to browse the marketplace.
 -View all available animals.
@@ -29,7 +29,7 @@ Table of Contents
 -Add animals to a cart.
 -Checkout and pay for items in the cart.
 
-##Tech Stack##
+2.3: Tech Stack
 
 **Frontend**: ReactJS, Redux Toolkit (state management), Tailwind CSS (styling)
 **Backend**: Django
@@ -38,9 +38,9 @@ Table of Contents
 **Wireframes**: Designed in Figma for mobile-friendly layouts
 **Progressive Web Application**: Designed to be used by the Farmer and the buyer while still offline.
 
-##Setup Instructions##
+3: Setup Instructions
 
-##Frontend Setup##
+3.1: Frontend Setup
 
 **Clone the repository**:git clone https://github.com/draron-dare-045/Farmart.git
 ```
@@ -57,7 +57,7 @@ npm run dev
 
 The app will run at http://localhost:3000.
 
-##Backend Setup##
+3.2: Backend Setup
 
 **Navigate to the backend repository**:git clone https://github.com/draron-dare-045/Farmart-Backend.git
 ```
@@ -80,14 +80,14 @@ Start the backend server:python manage.py runserver
 
 The API will run at http://localhost:5000.
 ```
-##Environment Variables##
+4: Environment Variables
 
 **Frontend**: Create a .env file in the Farmart root with:REACT_APP_API_URL=http://localhost:5000
 
 **Backend**: Configure database settings in farmart_project/settings.py.
 
 
-##Access the App##:
+4.1: Access the App
 **Frontend**: Open http://localhost:3000 for the React app.
 **Backend**: Access API endpoints at http://localhost:5000/api (e.g., /api/animals, /api/auth/login).
 
@@ -114,9 +114,9 @@ python -m unittest -->
 
 
 
-##Contributing##
+5: Contributing
 
-##Fork the repository##.
+5.1: Fork the repository.
 **Create a feature branch**:git checkout -b feature/your-feature
 
 
