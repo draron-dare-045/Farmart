@@ -1,11 +1,11 @@
-1: Farmart
+## Farmart
 
 Farmart is an e-commerce platform designed to connect farmers directly with buyers, eliminating middlemen to ensure farmers maximize their profits. This application allows farmers to list and manage farm animals for sale, while users can browse, search, filter, and purchase animals seamlessly.
 Table of Contents
 
 
 
-2: Features
+## Features
 
 **Farmer Dashboard**: Farmers can register/login, add/edit animals for sale, and confirm/reject orders.
 **User Marketplace**: Users can register/login, browse animals, search by type/breed, filter by breed/age, add to cart, and checkout.
@@ -38,7 +38,7 @@ Table of Contents
 **Wireframes**: Designed in Figma for mobile-friendly layouts
 **Progressive Web Application**: Designed to be used by the Farmer and the buyer while still offline.
 
-3: Setup Instructions
+## Setup Instructions
 
 3.1: Frontend Setup
 
@@ -80,7 +80,7 @@ Start the backend server:python manage.py runserver
 
 The API will run at http://localhost:5000.
 ```
-4: Environment Variables
+## Environment Variables
 
 **Frontend**: Create a .env file in the Farmart root with:REACT_APP_API_URL=http://localhost:5000
 
@@ -114,7 +114,7 @@ python -m unittest -->
 
 
 
-5: Contributing
+## Contributing
 
 5.1: Fork the repository.
 **Create a feature branch**:git checkout -b feature/your-feature
