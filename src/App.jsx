@@ -22,15 +22,11 @@ function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { isAuthenticated, user, loading } = useAuth();
 
-  
   useEffect(() => {
-    const onLocationChange = () => {
-      setPath(window.location.pathname);
-    };
+    const onLocationChange = () => setPath(window.location.pathname);
     window.addEventListener('popstate', onLocationChange);
     return () => window.removeEventListener('popstate', onLocationChange);
   }, []);
-
 
   const onNavigate = (newPath) => {
     window.history.pushState({}, '', newPath);
@@ -39,10 +35,9 @@ function App() {
 
   const renderPage = () => {
     if (loading) return <Spinner fullScreen />;
-  
+
     if (path.startsWith('/seller')) {
       if (!isAuthenticated || user?.user_type !== 'FARMER') {
-        
         if (path === '/seller') return <FarmerLandingPage onNavigate={onNavigate} />;
         return <FarmerAuthPage onNavigate={onNavigate} />;
       }
@@ -52,11 +47,12 @@ function App() {
           <FarmerSidebar onNavigate={onNavigate} currentPath={path} />
           <div className="flex-1 flex flex-col overflow-hidden">
             <FarmerNavbar onNavigate={onNavigate} />
-            <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
+            <main className="flex-1 overflow-auto bg-gray-200">
               {path === '/seller/dashboard' && <FarmerDashboardPage />}
               {path === '/seller/listings' && <FarmerListingsPage />}
               {path === '/seller/orders' && <FarmerOrdersPage />}
               {path === '/seller/contact' && <ContactUs onNavigate={onNavigate} fromPortal="seller" />}
+              {!['/seller/dashboard', '/seller/listings', '/seller/orders', '/seller/contact'].includes(path) && <NotFoundPage onNavigate={onNavigate} />}
             </main>
           </div>
         </div>
@@ -78,15 +74,13 @@ function App() {
         return isAuthenticated ? <BuyerOrdersPage onNavigate={onNavigate} /> : <BuyerAuthPage onNavigate={onNavigate} />;
       case '/contact':
         return <ContactUs onNavigate={onNavigate} fromPortal="buyer" />;
-      case '/seller': 
-        return <FarmerLandingPage onNavigate={onNavigate} />;
       default:
         return <NotFoundPage onNavigate={onNavigate} />;
     }
   };
-  
+
   const showBuyerNavbar = !path.startsWith('/seller') && path !== '/';
-  
+
   return (
     <div className="min-h-screen font-sans">
       {showBuyerNavbar && <BuyerNavbar onNavigate={onNavigate} onCartClick={() => setIsCartOpen(true)} />}
