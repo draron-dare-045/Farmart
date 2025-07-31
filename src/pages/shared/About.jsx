@@ -52,7 +52,7 @@ const About = ({ onNavigate }) => {
           <h2 className="text-3xl font-bold text-black">Why Choose Farmart?</h2>
           <ul className="list-disc pl-6 text-black text-lg space-y-3">
             <li>Direct access to a reliable network of verified farmers and trusted buyers</li>
-            <li>Secure transactions with built-in identity checks and real-time tracking</li>
+            <li>Secure transactions with built-in identity checks</li>
             <li>Inventory updates and smart dashboard for both farmers and buyers</li>
             <li>Commitment to ethical sourcing and animal welfare</li>
             <li>Promoting local agricultural communities through digital innovation</li>
