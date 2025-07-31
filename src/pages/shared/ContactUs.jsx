@@ -36,7 +36,8 @@ const ContactUs = ({ onNavigate, fromPortal }) => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10 px-4">
       <div className="w-full max-w-4xl bg-white shadow-xl rounded-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
-        <div className="bg-green-700 text-white p-8 flex flex-col justify-center">
+      <div className="bg-teal-700 text-white p-8 flex flex-col justify-center">
+
           <h2 className="text-3xl font-bold mb-4">Get in Touch</h2>
           <p className="mb-6">Have questions? We'd love to hear from you. Reach out and we’ll get back to you soon.</p>
           <ul className="space-y-4">
