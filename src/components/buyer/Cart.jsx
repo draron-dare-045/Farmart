@@ -15,7 +15,7 @@ const Cart = ({ isOpen, onClose, onNavigate }) => {
       await checkout();
       alert('Order placed successfully!');
       onClose();
-      onNavigate('/my-orders'); 
+      onNavigate('/my-orders');  
     } catch (err) {
       setError(err.message || 'An error occurred.');
     } finally {
@@ -29,7 +29,7 @@ const Cart = ({ isOpen, onClose, onNavigate }) => {
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
-      <div className="p-4 flex justify-between items-center border-b border-green-100 bg-green-900 text-white">
+      <div className="p-4 flex justify-between items-center border-b border-green-100 bg-green-800 text-white">
         <h2 className="text-lg font-semibold">Shopping Cart ({itemCount})</h2>
         <button
           onClick={onClose}

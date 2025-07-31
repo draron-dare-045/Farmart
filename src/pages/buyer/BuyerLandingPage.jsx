@@ -39,8 +39,6 @@ const BuyerLandingPage = ({ onNavigate }) => {
             Login / Register
           </Button>
         </div>
-
-        {/* ✅ New About Us button */}
         <div className="mt-2">
           <button
             onClick={() => onNavigate('/about')}
