@@ -23,13 +23,12 @@ const AnimalCard = ({ animal }) => {
         }, 300);
     };
 
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
+    const imageUrl = animal.image 
+        ? animal.image 
+        : `https://placehold.co/600x400/e2f0e2/333?text=${encodeURIComponent(animal.name)}`;
 
     return (
         <>
@@ -40,7 +39,7 @@ const AnimalCard = ({ animal }) => {
                 <div className="relative">
                     <img 
                         className="h-48 w-full object-cover" 
-                        src={animal.image || `https://placehold.co/600x400/e2f0e2/333?text=${animal.name.replace(' ', '+')}`} 
+                        src={imageUrl}
                         alt={animal.name} 
                     />
                     {isOutOfStock && (
@@ -55,7 +54,9 @@ const AnimalCard = ({ animal }) => {
                     <p className="text-sm text-gray-600 mt-1">Sold by: {animal.farmer_username}</p>
                     <p className="text-sm text-gray-500 mt-1">Stock: {animal.quantity}</p>
                     <div className="mt-auto pt-4">
-                        <p className="text-xl font-bold text-green-700">Ksh {parseFloat(animal.price).toLocaleString()}</p>
+                        <p className="text-xl font-bold text-green-700">
+                            Ksh {parseFloat(animal.price).toLocaleString()}
+                        </p>
                         <Button 
                             onClick={(e) => {
                                 e.stopPropagation();
@@ -86,7 +87,7 @@ const AnimalCard = ({ animal }) => {
                         </div>
                         <img 
                             className="h-64 w-full object-cover rounded-md mb-4 border border-gray-100" 
-                            src={animal.image || `https://placehold.co/600x400/e2f0e2/333?text=${animal.name.replace(' ', '+')}`} 
+                            src={imageUrl} 
                             alt={animal.name} 
                         />
                         <div className="space-y-3">
@@ -95,10 +96,12 @@ const AnimalCard = ({ animal }) => {
                             <p className="text-base text-gray-700"><span className="font-semibold">Sold by:</span> {animal.farmer_username}</p>
                             <p className="text-base text-gray-700"><span className="font-semibold">Price:</span> Ksh {parseFloat(animal.price).toLocaleString()}</p>
                             <p className="text-base text-gray-700"><span className="font-semibold">Stock:</span> {animal.quantity}</p>
+                            {animal.age && (
+                                <p className="text-base text-gray-700"><span className="font-semibold">Age:</span> {animal.age} months</p>
+                            )}
                             <p className="text-base text-gray-700">
                                 <span className="font-semibold">Description:</span> {animal.description || 'No description available for this animal.'}
                             </p>
-                            {animal.age && <p className="text-base text-gray-700"><span className="font-semibold">Age:</span> {animal.age}</p>}
                         </div>
                         <div className="mt-6 flex justify-end space-x-3">
                             <Button 
