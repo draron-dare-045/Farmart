@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './hooks/useAuth';
+
 import BuyerLandingPage from './pages/buyer/BuyerLandingPage';
 import FarmerLandingPage from './pages/farmer/FarmerLandingPage';
 import ContactUs from './pages/shared/ContactUs';
+import About from './pages/shared/About';
+
 import BuyerHomePage from './pages/buyer/HomePage';
 import BuyerAuthPage from './pages/buyer/AuthPage';
 import BuyerOrdersPage from './pages/buyer/OrdersPage';
+
 import FarmerDashboardPage from './pages/farmer/DashboardPage';
 import FarmerListingsPage from './pages/farmer/ListingsPage';
 import FarmerOrdersPage from './pages/farmer/OrdersPage';
 import FarmerAuthPage from './pages/farmer/AuthPage';
+
 import NotFoundPage from './pages/shared/NotFoundPage';
 import BuyerNavbar from './components/layout/BuyerNavbar';
 import FarmerSidebar from './components/layout/FarmerSidebar';
@@ -52,7 +57,9 @@ function App() {
               {path === '/seller/listings' && <FarmerListingsPage />}
               {path === '/seller/orders' && <FarmerOrdersPage />}
               {path === '/seller/contact' && <ContactUs onNavigate={onNavigate} fromPortal="seller" />}
-              {!['/seller/dashboard', '/seller/listings', '/seller/orders', '/seller/contact'].includes(path) && <NotFoundPage onNavigate={onNavigate} />}
+              {!['/seller/dashboard', '/seller/listings', '/seller/orders', '/seller/contact'].includes(path) && (
+                <NotFoundPage onNavigate={onNavigate} />
+              )}
             </main>
           </div>
         </div>
@@ -74,6 +81,8 @@ function App() {
         return isAuthenticated ? <BuyerOrdersPage onNavigate={onNavigate} /> : <BuyerAuthPage onNavigate={onNavigate} />;
       case '/contact':
         return <ContactUs onNavigate={onNavigate} fromPortal="buyer" />;
+      case '/about':
+        return <About onNavigate={onNavigate} />;
       default:
         return <NotFoundPage onNavigate={onNavigate} />;
     }
