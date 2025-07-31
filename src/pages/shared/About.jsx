@@ -42,8 +42,8 @@ const About = ({ onNavigate }) => {
           </p>
           <p className="text-black text-lg leading-relaxed">
             We eliminate unnecessary middlemen, ensuring farmers receive fair value for their livestock while consumers
-            access healthy animals at transparent prices. Built for everyone — from smallholder farmers to large-scale
-            buyers — Farmart leverages technology to empower rural communities with easy-to-use tools for listing, selling,
+            access healthy animals at transparent prices. Built for everyone, from smallholder farmers to large-scale
+            buyers, Farmart leverages technology to empower rural communities with easy-to-use tools for listing, selling,
             and managing livestock.
           </p>
         </section>
@@ -62,8 +62,8 @@ const About = ({ onNavigate }) => {
         <section className="space-y-6 border-t border-gray-300 pt-8">
           <h2 className="text-3xl font-bold text-black">Our Vision</h2>
           <p className="text-black text-lg leading-relaxed">
-            We envision a future where livestock trade is smart, inclusive, and transparent — a future where farmers can thrive
-            and buyers can trust every transaction. Farmart is more than a platform — it’s a movement shaping the future of
+            We envision a future where livestock trade is smart, inclusive, and transparent, a future where farmers can thrive
+            and buyers can trust every transaction. Farmart is more than a platform, it’s a movement shaping the future of
             agriculture through connectivity, fairness, and innovation.
           </p>
         </section>
