@@ -102,18 +102,6 @@ Register/login at /register or /login.
 Browse animals at /animals, use search/filter, add to cart, and checkout at /checkout.
 
 
-
-<!-- Testing
-
-Frontend (Jest):cd Farmart
-npm test
-
-
-Backend (Minitest):cd Farmart-Backend
-python -m unittest -->
-
-
-
 ## Contributing
 
 5.1: Fork the repository.
