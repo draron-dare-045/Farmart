@@ -9,7 +9,7 @@ const About = ({ onNavigate }) => {
     },
     {
       name: 'Aron Onkware',
-      image: '/images/Onkware.jpeg',
+      image: '/images/onkware.jpeg',
       github: 'https://github.com/draron-dare-045',
     },
     {
@@ -24,7 +24,7 @@ const About = ({ onNavigate }) => {
     },
     {
       name: 'Claire Kimani',
-      image: '/images/Claire.jpeg',
+      image: '/images/claire.jpeg',
       github: 'https://github.com/clairekimani123',
     },
   ];
