@@ -16,11 +16,7 @@ const FarmerSidebar = ({ onNavigate, currentPath }) => {
   return (
     <aside className="w-64 min-h-screen bg-green-50 border-r border-green-100 shadow-sm flex flex-col">
       <div className="py-6 px-5 border-b border-green-200 text-center">
-        <a
-          href="/seller"
-          onClick={(e) => handleNav(e, '/seller')}
-          className="flex items-center justify-center space-x-2"
-        >
+        <div className="flex items-center justify-center space-x-2">
           <img
             src="/images/image.jpg.jpg"
             alt="Farmart Logo"
@@ -29,7 +25,7 @@ const FarmerSidebar = ({ onNavigate, currentPath }) => {
           <span className="text-2xl font-bold tracking-tight text-green-700">
             Seller <span className="text-gray-800">Central</span>
           </span>
-        </a>
+        </div>
       </div>
       <nav className="flex-1 px-4 py-6">
         <ul className="space-y-2">
@@ -72,6 +68,7 @@ const FarmerSidebar = ({ onNavigate, currentPath }) => {
         </ul>
       </nav>
     </aside>
-  )
+  );
 };
-export default FarmerSidebar;
+
+export default FarmerSidebar;     

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import apiClient from '../../api/client';
 import Spinner from '../../components/common/Spinner';
@@ -10,64 +10,87 @@ const FarmerListingsPage = () => {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingAnimal, setEditingAnimal] = useState(null); 
+  const [formData, setFormData] = useState({});
 
-  const [newAnimalData, setNewAnimalData] = useState({
-    name: '', animal_type: 'COW', breed: '', age: '', price: '', description: '', quantity: 1, image: null,
-  });
-
-  const fetchListings = async () => {
+  const fetchListings = useCallback(async () => {
+    if (!user) return;
     try {
       setLoading(true);
-      const allAnimals = await apiClient.get('/api/animals/', tokens.access);
-      const myListings = allAnimals.filter(animal => animal.farmer === user.id);
-      setListings(myListings);
+      const animals = await apiClient.get('/api/animals/', tokens.access);
+      setListings(animals.filter(a => a.farmer_username === user.username));
     } catch {
-      setError('⚠️ Failed to fetch listings.');
+      setError('⚠️ Failed to fetch your listings.');
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, tokens.access]);
 
   useEffect(() => {
     fetchListings();
-  }, []);
+  }, [fetchListings]);
 
-  const handleOpenModal = () => setIsModalOpen(true);
+  const handleOpenModal = (animal = null) => {
+    if (animal) {
+      setEditingAnimal(animal);
+      setFormData({
+        name: animal.name,
+        animal_type: animal.animal_type,
+        breed: animal.breed,
+        age: animal.age,
+        price: animal.price,
+        description: animal.description,
+        quantity: animal.quantity,
+        image: null, 
+      });
+    } else {
+      
+      setEditingAnimal(null);
+      setFormData({
+        name: '', animal_type: 'COW', breed: '', age: '', price: '', description: '', quantity: 1, image: null,
+      });
+    }
+    setIsModalOpen(true);
+  };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setNewAnimalData({
-      name: '', animal_type: 'COW', breed: '', age: '', price: '', description: '', quantity: 1, image: null,
-    });
+    setEditingAnimal(null);
+    setFormData({});
   };
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === 'image') {
-      setNewAnimalData(prev => ({ ...prev, image: files[0] }));
-    } else {
-      setNewAnimalData(prev => ({ ...prev, [name]: value }));
-    }
+    setFormData(prev => ({ ...prev, [name]: name === 'image' ? files[0] : value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    Object.entries(newAnimalData).forEach(([key, value]) => {
-      if (value !== null) formData.append(key, value);
+    const data = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value !== null && value !== '') {
+        data.append(key, value);
+      }
     });
 
     try {
-      await apiClient.postWithFile('/api/animals/', formData, tokens.access);
+      if (editingAnimal) {
+        await apiClient.patchWithFile(`/api/animals/${editingAnimal.id}/`, data, tokens.access);
+      } else {
+        await apiClient.postWithFile('/api/animals/', data, tokens.access);
+      }
       handleCloseModal();
-      fetchListings();
-    } catch {
-      setError('❌ Failed to create listing. Please check your input.');
+      fetchListings(); 
+    } catch (err) {
+      const errorDetail = err.data ? JSON.stringify(err.data) : 'An unknown error occurred.';
+      setError(`❌ Failed to ${editingAnimal ? 'update' : 'create'} listing: ${errorDetail}`);
     }
   };
 
   const handleDelete = async (animalId) => {
-    if (window.confirm('Are you sure you want to delete this listing?')) {
+    if (window.confirm('Are you sure you want to delete this listing? This action cannot be undone.')) {
       try {
         await apiClient.delete(`/api/animals/${animalId}/`, tokens.access);
         fetchListings();
@@ -77,135 +100,77 @@ const FarmerListingsPage = () => {
     }
   };
 
+  if (loading) return <Spinner fullScreen />;
+
   return (
-    <div className="p-6 md:p-8 bg-gray-50 min-h-screen">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <h1 className="text-2xl md:text-3xl font-bold text-green-800">Manage Listings</h1>
-        <Button onClick={handleOpenModal} variant="secondary">+ Add New Animal</Button>
-      </div>
-
-      {loading && <Spinner />}
-
-      {error && (
-        <div className="bg-red-100 text-red-700 p-4 rounded-md border border-red-300 mb-4">
-          {error}
+    <div className="p-4 sm:p-8 bg-gray-50 min-h-screen">
+      <div className="container mx-auto">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-800">My Livestock Listings</h1>
+          <Button onClick={() => handleOpenModal()} variant="primary">
+            + Add New Listing
+          </Button>
         </div>
-      )}
 
-      {!loading && listings.length === 0 && (
-        <div className="text-center text-gray-600 bg-white py-12 rounded shadow-sm">
-          <p className="text-lg">You haven't listed any animals yet.</p>
-        </div>
-      )}
+        {error && <div className="bg-red-100 text-red-800 p-3 rounded-lg mb-6">{error}</div>}
 
-      {!loading && listings.length > 0 && (
-        <div className="bg-white shadow rounded-lg overflow-x-auto">
-          <table className="min-w-full text-sm divide-y divide-gray-200">
-            <thead className="bg-gray-100 text-gray-600 uppercase text-xs tracking-wider">
-              <tr>
-                <th className="px-6 py-3 text-left">Name</th>
-                <th className="px-6 py-3 text-left">Type</th>
-                <th className="px-6 py-3 text-left">Stock</th>
-                <th className="px-6 py-3 text-left">Price</th>
-                <th className="px-6 py-3 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100 bg-white">
-              {listings.map(animal => (
-                <tr key={animal.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">{animal.name}</td>
-                  <td className="px-6 py-4">{animal.animal_type}</td>
-                  <td className="px-6 py-4">{animal.quantity}</td>
-                  <td className="px-6 py-4">Ksh {parseFloat(animal.price).toLocaleString()}</td>
-                  <td className="px-6 py-4">
-                    <Button onClick={() => handleDelete(animal.id)} variant="danger">Delete</Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal} title="Add New Animal Listing">
-        <form onSubmit={handleSubmit} className="space-y-4 text-sm">
-          <input
-            name="name"
-            value={newAnimalData.name}
-            onChange={handleChange}
-            placeholder="Animal Name (e.g., Bessie)"
-            required
-            className="w-full p-2 border rounded-md focus:ring-green-300 focus:outline-none"
-          />
-          <select
-            name="animal_type"
-            value={newAnimalData.animal_type}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-md"
-          >
-            <option value="COW">Cow</option>
-            <option value="GOAT">Goat</option>
-            <option value="SHEEP">Sheep</option>
-            <option value="CHICKEN">Chicken</option>
-            <option value="PIG">Pig</option>
-          </select>
-          <input
-            name="breed"
-            value={newAnimalData.breed}
-            onChange={handleChange}
-            placeholder="Breed (e.g., Friesian)"
-            required
-            className="w-full p-2 border rounded-md"
-          />
-          <input
-            name="age"
-            type="number"
-            value={newAnimalData.age}
-            onChange={handleChange}
-            placeholder="Age in months"
-            required
-            className="w-full p-2 border rounded-md"
-          />
-          <input
-            name="price"
-            type="number"
-            step="0.01"
-            value={newAnimalData.price}
-            onChange={handleChange}
-            placeholder="Price (Ksh)"
-            required
-            className="w-full p-2 border rounded-md"
-          />
-          <input
-            name="quantity"
-            type="number"
-            value={newAnimalData.quantity}
-            onChange={handleChange}
-            placeholder="Available Quantity"
-            required
-            className="w-full p-2 border rounded-md"
-          />
-          <textarea
-            name="description"
-            value={newAnimalData.description}
-            onChange={handleChange}
-            placeholder="Description"
-            required
-            className="w-full p-2 border rounded-md"
-          />
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">Image</label>
-            <input
-              name="image"
-              type="file"
-              onChange={handleChange}
-              accept="image/*"
-              className="w-full p-2 border rounded-md"
-            />
+        {!loading && listings.length === 0 ? (
+          <div className="text-center bg-white py-12 px-4 rounded-lg border">
+            <p className="text-lg font-medium text-gray-700">You have no active listings.</p>
+            <p className="text-gray-500 mt-2">Click "Add New Listing" to put your livestock on the market!</p>
           </div>
-          <Button type="submit" variant="secondary" className="w-full">Create Listing</Button>
-        </form>
-      </Modal>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {listings.map(animal => (
+              <div key={animal.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
+                <div className="h-48 w-full bg-gray-200">
+                  {animal.image ? (
+                    <img 
+                      src={animal.image} 
+                      alt={animal.name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="h-full w-full flex items-center justify-center text-gray-400">No Image</div>
+                  )}
+                </div>
+                <div className="p-4 flex flex-col flex-grow">
+                  <h3 className="text-lg font-semibold text-gray-900">{animal.name}</h3>
+                  <p className="text-sm text-gray-500">{animal.breed}</p>
+                  <p className="text-2xl font-bold text-green-600 mt-2">Ksh {parseFloat(animal.price).toLocaleString()}</p>
+                  <p className="text-sm text-gray-600 mt-1">Stock: {animal.quantity}</p>
+                  <div className="mt-auto pt-4 flex gap-2">
+                    <Button onClick={() => handleOpenModal(animal)} variant="secondary" size="sm" className="flex-1">Edit</Button>
+                    <Button onClick={() => handleDelete(animal.id)} variant="danger" size="sm" className="flex-1">Delete</Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <Modal isOpen={isModalOpen} onClose={handleCloseModal} title={editingAnimal ? 'Edit Listing' : 'Add New Listing'}>
+          <form onSubmit={handleSubmit} className="p-4 space-y-4">
+            <input name="name" value={formData.name || ''} onChange={handleChange} placeholder="Animal Name" required className="w-full p-2 border rounded-md"/>
+            <select name="animal_type" value={formData.animal_type || 'COW'} onChange={handleChange} className="w-full p-2 border rounded-md">
+              <option value="COW">Cow</option> <option value="GOAT">Goat</option> <option value="SHEEP">Sheep</option> <option value="CHICKEN">Chicken</option> <option value="PIG">Pig</option>
+            </select>
+            <input name="breed" value={formData.breed || ''} onChange={handleChange} placeholder="Breed" required className="w-full p-2 border rounded-md"/>
+            <input name="age" type="number" value={formData.age || ''} onChange={handleChange} placeholder="Age in months" required className="w-full p-2 border rounded-md"/>
+            <input name="price" type="number" step="0.01" value={formData.price || ''} onChange={handleChange} placeholder="Price (Ksh)" required className="w-full p-2 border rounded-md"/>
+            <input name="quantity" type="number" value={formData.quantity || ''} onChange={handleChange} placeholder="Quantity" required className="w-full p-2 border rounded-md"/>
+            <textarea name="description" value={formData.description || ''} onChange={handleChange} placeholder="Description" required className="w-full p-2 border rounded-md h-24"/>
+            <div>
+              <label className="text-sm font-medium text-gray-600 block mb-1">Image</label>
+              <input name="image" type="file" onChange={handleChange} accept="image/*" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"/>
+              {editingAnimal && <p className="text-xs text-gray-400 mt-1">Leave blank to keep the current image.</p>}
+            </div>
+            <Button type="submit" variant="primary" className="w-full">
+              {editingAnimal ? 'Save Changes' : 'Create Listing'}
+            </Button>
+          </form>
+        </Modal>
+      </div>
     </div>
   );
 };

@@ -39,8 +39,16 @@ const BuyerLandingPage = ({ onNavigate }) => {
             Login / Register
           </Button>
         </div>
+        <div className="mt-2">
+          <button
+            onClick={() => onNavigate('/about')}
+            className="text-green-700 hover:underline text-sm font-medium transition duration-200"
+          >
+            Learn more about us →
+          </button>
+        </div>
 
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-600 mt-6">
           Are you a farmer?{' '}
           <a
             href="/seller"
