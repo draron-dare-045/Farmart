@@ -33,11 +33,8 @@ const FarmerListingsPage = () => {
       setLoading(true);
       const animals = await apiClient.get('/api/animals/', tokens.access);
 
-      setListings(
-        animals.filter(a => a.farmer_username === user.username)
-      );
+      setListings(animals.filter(a => a.farmer_username === user.username));
     } catch (err) {
-      console.log(err);
       setError('Failed to load your listings.');
     } finally {
       setLoading(false);
@@ -77,6 +74,7 @@ const FarmerListingsPage = () => {
 
     setIsModalOpen(true);
   };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingAnimal(null);
@@ -84,7 +82,6 @@ const FarmerListingsPage = () => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-
     setFormData(prev => ({
       ...prev,
       [name]: name === 'image' ? files[0] : value,
@@ -93,18 +90,19 @@ const FarmerListingsPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = new FormData();
-    data.append('name', formData.name);
-    data.append('animal_type', formData.animal_type);
-    data.append('breed', formData.breed);
-    data.append('age', Number(formData.age));
-    data.append('price', Number(formData.price));
-    data.append('description', formData.description);
-    data.append('quantity', Number(formData.quantity));
 
-    if (formData.image) {
-      data.append('image', formData.image);
-    }
+    const data = new FormData();
+    Object.entries({
+      name: formData.name,
+      animal_type: formData.animal_type,
+      breed: formData.breed,
+      age: Number(formData.age),
+      price: Number(formData.price),
+      description: formData.description,
+      quantity: Number(formData.quantity),
+    }).forEach(([k, v]) => data.append(k, v));
+
+    if (formData.image) data.append('image', formData.image);
 
     try {
       if (editingAnimal) {
@@ -120,8 +118,7 @@ const FarmerListingsPage = () => {
       setIsModalOpen(false);
       fetchListings();
     } catch (err) {
-      console.log('BACKEND ERROR:', err?.data || err);
-      setError(JSON.stringify(err?.data) || 'Failed to save listing.');
+      setError('Failed to save listing.');
     }
   };
 
@@ -131,46 +128,60 @@ const FarmerListingsPage = () => {
     try {
       await apiClient.delete(`/api/animals/${id}/`, tokens.access);
       fetchListings();
-    } catch (err) {
-      console.log(err);
+    } catch {
       setError('Failed to delete listing.');
     }
   };
 
-  if (loading) return <Spinner fullScreen />;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#07120c] text-white">
+        <Spinner className="w-10 h-10 text-green-400" />
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-[#07120c] text-white p-4 sm:p-8">
-      <div className="max-w-7xl mx-auto flex justify-between items-center mb-8">
+    <div className="min-h-screen bg-[#07120c] text-white px-4 sm:px-6 py-6">
+
+      {/* HEADER */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+
         <h1 className="text-2xl sm:text-3xl font-black">
           My <span className="text-green-400">Listings</span>
         </h1>
 
         <Button
           onClick={() => handleOpenModal()}
-          className="bg-green-500 text-black font-bold px-4 py-2 rounded-xl"
+          className="bg-green-500 text-black font-bold px-4 py-2 rounded-xl w-full sm:w-auto"
         >
           + Add Listing
         </Button>
       </div>
+
+      {/* ERROR */}
       {error && (
-        <div className="max-w-7xl mx-auto mb-6 p-4 rounded-xl bg-red-500/10 border border-red-400/20 text-red-300">
+        <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-400/20 text-red-300 text-sm">
           {error}
         </div>
       )}
+
+      {/* EMPTY STATE */}
       {listings.length === 0 ? (
         <div className="text-center text-gray-400 mt-20">
           No livestock listings yet
         </div>
       ) : (
-        <div className="max-w-7xl mx-auto grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
           {listings.map(animal => (
             <div
               key={animal.id}
-              className="rounded-2xl overflow-hidden bg-white/5 border border-white/10"
+              className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden"
             >
-              <div className="h-44">
+
+              {/* IMAGE */}
+              <div className="h-40 sm:h-44 bg-black/20">
                 {animal.image ? (
                   <img
                     src={animal.image}
@@ -178,41 +189,49 @@ const FarmerListingsPage = () => {
                     alt=""
                   />
                 ) : (
-                  <div className="h-full flex items-center justify-center text-gray-500">
+                  <div className="h-full flex items-center justify-center text-gray-500 text-sm">
                     No Image
                   </div>
                 )}
               </div>
 
+              {/* CONTENT */}
               <div className="p-4">
-                <h3 className="font-bold">{animal.name}</h3>
+
+                <h3 className="font-bold truncate">{animal.name}</h3>
                 <p className="text-xs text-gray-400">{animal.breed}</p>
 
                 <p className="mt-2 text-green-400 font-bold">
                   Ksh {Number(animal.price).toLocaleString()}
                 </p>
 
+                {/* ACTIONS */}
                 <div className="flex gap-2 mt-4">
+
                   <button
                     onClick={() => handleOpenModal(animal)}
-                    className="flex-1 py-2 rounded-xl bg-white/5"
+                    className="flex-1 py-2 rounded-xl bg-white/5 text-sm"
                   >
                     Edit
                   </button>
 
                   <button
                     onClick={() => handleDelete(animal.id)}
-                    className="flex-1 py-2 rounded-xl bg-red-500/10 text-red-300"
+                    className="flex-1 py-2 rounded-xl bg-red-500/10 text-red-300 text-sm"
                   >
                     Delete
                   </button>
+
                 </div>
+
               </div>
             </div>
           ))}
 
         </div>
       )}
+
+      {/* MODAL */}
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
@@ -221,75 +240,49 @@ const FarmerListingsPage = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
 
-          <input
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Name"
-            className="w-full p-2 bg-black/40 border rounded"
-          />
-          <input
-            name="breed"
-            value={formData.breed}
-            onChange={handleChange}
-            placeholder="Breed"
-            className="w-full p-2 bg-black/40 border rounded"
-          />
-          <input
-            name="age"
-            value={formData.age}
-            onChange={handleChange}
-            placeholder="Age"
-            className="w-full p-2 bg-black/40 border rounded"
-          />
-          <input
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            placeholder="Price"
-            className="w-full p-2 bg-black/40 border rounded"
-          />
-          <input
-            name="quantity"
-            value={formData.quantity}
-            onChange={handleChange}
-            placeholder="Quantity"
-            className="w-full p-2 bg-black/40 border rounded"
-          />
+          {[
+            { name: 'name', placeholder: 'Name' },
+            { name: 'breed', placeholder: 'Breed' },
+            { name: 'age', placeholder: 'Age' },
+            { name: 'price', placeholder: 'Price' },
+            { name: 'quantity', placeholder: 'Quantity' },
+          ].map(field => (
+            <input
+              key={field.name}
+              name={field.name}
+              value={formData[field.name]}
+              onChange={handleChange}
+              placeholder={field.placeholder}
+              className="w-full p-3 bg-black/40 border border-white/10 rounded-xl text-sm"
+            />
+          ))}
+
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
-            className="w-full p-2 bg-black/40 border rounded h-24"
+            placeholder="Description"
+            className="w-full p-3 bg-black/40 border border-white/10 rounded-xl h-24 text-sm"
           />
-          <div>
-            <label className="block text-sm text-gray-300 mb-2">
-              Upload Image
-            </label>
 
-            <input
-              type="file"
-              name="image"
-              accept="image/*"
-              onChange={handleChange}
-              className="w-full text-sm text-gray-300
-                         file:mr-4 file:py-2 file:px-4
-                         file:rounded-lg file:border-0
-                         file:text-sm file:font-semibold
-                         file:bg-green-500 file:text-black
-                         hover:file:bg-green-400
-                         bg-black/40 border border-white/10 rounded-lg p-2"
-            />
-          </div>
+          {/* FILE UPLOAD */}
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            onChange={handleChange}
+            className="w-full text-sm file:bg-green-500 file:text-black file:px-4 file:py-2 file:rounded-lg bg-black/40 border border-white/10 rounded-xl p-2"
+          />
 
           <Button
             type="submit"
-            className="w-full bg-green-500 text-black font-bold"
+            className="w-full bg-green-500 text-black font-bold py-3 rounded-xl"
           >
             {editingAnimal ? 'Update' : 'Create'}
           </Button>
 
         </form>
+
       </Modal>
 
     </div>
