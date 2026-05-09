@@ -1,15 +1,30 @@
 import React from 'react';
 
-const Modal = ({ isOpen = true, onClose, title, children }) => {
+const Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
+
   return (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-60 z-50 flex justify-center items-center p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 relative">
-        <button onClick={onClose} className="absolute top-3 right-4 text-gray-600 hover:text-gray-800 text-2xl">
-          &times;
-        </button>
-        <h3 className="text-xl font-semibold mb-4 text-gray-800">{title}</h3>
-        {children}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div
+        onClick={onClose}
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+      />
+      <div className="relative w-full max-w-lg rounded-2xl border border-white/10 bg-[#07120c]/95 text-white shadow-2xl">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
+          <h3 className="text-lg font-bold text-white">
+            {title}
+          </h3>
+          <button
+            onClick={onClose}
+            className="text-white/60 hover:text-red-400 text-2xl transition"
+          >
+            ×
+          </button>
+        </div>
+        <div className="p-5">
+          {children}
+        </div>
+
       </div>
     </div>
   );
