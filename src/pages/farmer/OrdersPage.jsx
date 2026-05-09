@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import apiClient from '../../api/client';
 import Spinner from '../../components/common/Spinner';
-import Button from '../../components/common/Button';
 
 const StatusBadge = ({ status }) => {
   const styles = {
@@ -48,7 +47,11 @@ const FarmerOrdersPage = () => {
     setActionLoading(prev => ({ ...prev, [orderId]: true }));
 
     try {
-      await apiClient.patch(`/api/orders/${orderId}/`, { status: newStatus }, tokens.access);
+      await apiClient.patch(
+        `/api/orders/${orderId}/`,
+        { status: newStatus },
+        tokens.access
+      );
       fetchOrders();
     } catch {
       alert('Failed to update order.');
@@ -70,148 +73,138 @@ const FarmerOrdersPage = () => {
     [orders]
   );
 
-  if (loading) return <Spinner fullScreen />;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#07120c] text-white">
+        <Spinner className="w-10 h-10 text-green-400" />
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-[#07120c] text-white p-4 sm:p-8">
+    <div className="min-h-screen bg-[#07120c] text-white px-4 sm:px-6 py-6">
 
       {/* HEADER */}
-      <h1 className="text-2xl sm:text-3xl font-black mb-8">
+      <h1 className="text-2xl sm:text-3xl font-black mb-6">
         Orders <span className="text-green-400">Management</span>
       </h1>
 
       {error && (
-        <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-400/20 text-red-300">
+        <div className="mb-6 p-3 rounded-xl bg-red-500/10 border border-red-400/20 text-red-300 text-sm">
           {error}
         </div>
       )}
 
-      <div className="space-y-8">
+      {/* NEW ORDERS */}
+      <section className="mb-8 bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
 
-        {/* NEW ORDERS */}
-        <div className="rounded-2xl bg-white/5 border border-white/10 overflow-hidden">
-
-          <div className="p-4 sm:p-6 border-b border-white/10">
-            <h2 className="font-bold text-yellow-300">
-              New Orders (Pending Confirmation)
-            </h2>
-          </div>
-
-          {newOrders.length === 0 ? (
-            <div className="p-10 text-center text-gray-400">
-              No new orders
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-
-              <table className="w-full text-sm">
-
-                <thead className="text-gray-400 border-b border-white/10">
-                  <tr>
-                    <th className="text-left p-4">Order</th>
-                    <th className="text-left p-4">Total</th>
-                    <th className="text-center p-4">Actions</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {newOrders.map(order => (
-                    <tr key={order.id} className="border-b border-white/5 hover:bg-white/5 transition">
-
-                      <td className="p-4">
-                        <p className="font-semibold">#{order.id}</p>
-                        <p className="text-xs text-gray-400">
-                          Buyer: {order.buyer_username}
-                        </p>
-                      </td>
-
-                      <td className="p-4 font-bold text-green-400">
-                        Ksh {parseFloat(order.total_price).toLocaleString()}
-                      </td>
-
-                      <td className="p-4 text-center">
-
-                        {actionLoading[order.id] ? (
-                          <Spinner className="w-5 h-5 mx-auto" />
-                        ) : (
-                          <div className="flex justify-center gap-2">
-
-                            <button
-                              onClick={() => handleUpdateStatus(order.id, 'CONFIRMED')}
-                              className="px-3 py-1 rounded-lg bg-green-500/10 border border-green-400/20 text-green-300 hover:bg-green-500/20"
-                            >
-                              Confirm
-                            </button>
-
-                            <button
-                              onClick={() => handleUpdateStatus(order.id, 'REJECTED')}
-                              className="px-3 py-1 rounded-lg bg-red-500/10 border border-red-400/20 text-red-300 hover:bg-red-500/20"
-                            >
-                              Reject
-                            </button>
-
-                          </div>
-                        )}
-
-                      </td>
-
-                    </tr>
-                  ))}
-                </tbody>
-
-              </table>
-
-            </div>
-          )}
+        <div className="p-4 border-b border-white/10">
+          <h2 className="text-yellow-300 font-semibold">
+            New Orders (Pending)
+          </h2>
         </div>
 
-        {/* HISTORY */}
-        <div className="rounded-2xl bg-white/5 border border-white/10 overflow-hidden">
-
-          <div className="p-4 sm:p-6 border-b border-white/10">
-            <h2 className="font-bold text-gray-300">Order History</h2>
+        {newOrders.length === 0 ? (
+          <div className="p-8 text-center text-gray-400">
+            No new orders
           </div>
+        ) : (
+          <div className="p-4 space-y-4">
 
-          {processedOrders.length === 0 ? (
-            <div className="p-10 text-center text-gray-400">
-              No processed orders yet
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
+            {newOrders.map(order => (
+              <div
+                key={order.id}
+                className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3"
+              >
 
-              <table className="w-full text-sm">
+                {/* TOP INFO */}
+                <div className="flex justify-between">
+                  <div>
+                    <p className="font-semibold">Order #{order.id}</p>
+                    <p className="text-xs text-gray-400">
+                      {order.buyer_username}
+                    </p>
+                  </div>
 
-                <tbody>
-                  {processedOrders.map(order => (
-                    <tr key={order.id} className="border-b border-white/5 hover:bg-white/5 transition">
+                  <p className="text-green-400 font-bold">
+                    Ksh {parseFloat(order.total_price).toLocaleString()}
+                  </p>
+                </div>
 
-                      <td className="p-4">
-                        <p className="font-semibold">#{order.id}</p>
-                        <p className="text-xs text-gray-400">
-                          Buyer: {order.buyer_username}
-                        </p>
-                      </td>
+                {/* ACTIONS */}
+                <div className="flex gap-2">
 
-                      <td className="p-4 font-bold text-green-400">
-                        Ksh {parseFloat(order.total_price).toLocaleString()}
-                      </td>
+                  {actionLoading[order.id] ? (
+                    <Spinner className="w-5 h-5" />
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => handleUpdateStatus(order.id, 'CONFIRMED')}
+                        className="flex-1 py-2 text-sm rounded-lg bg-green-500/10 border border-green-400/20 text-green-300"
+                      >
+                        Confirm
+                      </button>
 
-                      <td className="p-4 text-center">
-                        <StatusBadge status={order.status} />
-                      </td>
+                      <button
+                        onClick={() => handleUpdateStatus(order.id, 'REJECTED')}
+                        className="flex-1 py-2 text-sm rounded-lg bg-red-500/10 border border-red-400/20 text-red-300"
+                      >
+                        Reject
+                      </button>
+                    </>
+                  )}
 
-                    </tr>
-                  ))}
-                </tbody>
+                </div>
 
-              </table>
+              </div>
+            ))}
 
-            </div>
-          )}
+          </div>
+        )}
+      </section>
 
+      {/* HISTORY */}
+      <section className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
+
+        <div className="p-4 border-b border-white/10">
+          <h2 className="text-gray-300 font-semibold">Order History</h2>
         </div>
 
-      </div>
+        {processedOrders.length === 0 ? (
+          <div className="p-8 text-center text-gray-400">
+            No processed orders yet
+          </div>
+        ) : (
+          <div className="p-4 space-y-4">
+
+            {processedOrders.map(order => (
+              <div
+                key={order.id}
+                className="bg-white/5 border border-white/10 rounded-xl p-4 flex justify-between items-center"
+              >
+
+                <div>
+                  <p className="font-semibold">Order #{order.id}</p>
+                  <p className="text-xs text-gray-400">
+                    {order.buyer_username}
+                  </p>
+                </div>
+
+                <div className="text-right space-y-1">
+                  <p className="text-green-400 font-bold">
+                    Ksh {parseFloat(order.total_price).toLocaleString()}
+                  </p>
+                  <StatusBadge status={order.status} />
+                </div>
+
+              </div>
+            ))}
+
+          </div>
+        )}
+
+      </section>
+
     </div>
   );
 };
