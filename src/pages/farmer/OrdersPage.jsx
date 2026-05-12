@@ -83,8 +83,6 @@ const FarmerOrdersPage = () => {
 
   return (
     <div className="min-h-screen bg-[#07120c] text-white px-4 sm:px-6 py-6">
-
-      {/* HEADER */}
       <h1 className="text-2xl sm:text-3xl font-black mb-6">
         Orders <span className="text-green-400">Management</span>
       </h1>
@@ -95,7 +93,7 @@ const FarmerOrdersPage = () => {
         </div>
       )}
 
-      {/* NEW ORDERS */}
+  
       <section className="mb-8 bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
 
         <div className="p-4 border-b border-white/10">

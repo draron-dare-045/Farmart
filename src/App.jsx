@@ -1,25 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './hooks/useAuth';
-
-// Buyer
 import BuyerLandingPage from './pages/buyer/BuyerLandingPage';
 import BuyerHomePage from './pages/buyer/HomePage';
 import BuyerAuthPage from './pages/buyer/AuthPage';
 import BuyerOrdersPage from './pages/buyer/OrdersPage';
-
-// Farmer
 import FarmerLandingPage from './pages/farmer/FarmerLandingPage';
 import FarmerDashboardPage from './pages/farmer/DashboardPage';
 import FarmerListingsPage from './pages/farmer/ListingsPage';
 import FarmerOrdersPage from './pages/farmer/OrdersPage';
 import FarmerAuthPage from './pages/farmer/AuthPage';
-
-// Shared
 import ContactUs from './pages/shared/ContactUs';
 import About from './pages/shared/About';
 import NotFoundPage from './pages/shared/NotFoundPage';
-
-// Layout
 import BuyerNavbar from './components/layout/BuyerNavbar';
 import FarmerSidebar from './components/layout/FarmerSidebar';
 import FarmerNavbar from './components/layout/FarmerNavbar';
@@ -50,7 +42,6 @@ function App() {
   const isFarmerRoute = path.startsWith('/seller');
 
   const renderFarmerRoutes = () => {
-    // not logged in farmer
     if (!isAuthenticated || user?.user_type !== 'FARMER') {
       if (path === '/seller') {
         return <FarmerLandingPage onNavigate={onNavigate} />;
@@ -120,22 +111,18 @@ function App() {
 
   return (
     <div className="min-h-screen font-sans bg-[#050b08]">
-      {/* Buyer Navbar only when not seller route */}
       {!isFarmerRoute && path !== '/' && (
         <BuyerNavbar
           onNavigate={onNavigate}
           onCartClick={() => setIsCartOpen(true)}
         />
       )}
-
-      {/* Cart */}
       <Cart
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         onNavigate={onNavigate}
       />
 
-      {/* Pages */}
       {isFarmerRoute ? renderFarmerRoutes() : renderBuyerRoutes()}
     </div>
   );

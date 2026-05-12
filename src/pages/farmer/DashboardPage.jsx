@@ -83,8 +83,6 @@ const FarmerDashboardPage = () => {
 
   return (
     <div className="min-h-screen bg-[#050b08] text-white px-4 sm:px-6 lg:px-10 py-6">
-
-      {/* HEADER */}
       <div className="mb-6 sm:mb-10">
         <h1 className="text-2xl sm:text-4xl font-black text-center">
           Business <span className="text-emerald-400">Dashboard</span>
@@ -94,7 +92,6 @@ const FarmerDashboardPage = () => {
         </p>
       </div>
 
-      {/* STATS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
 
         <div className="bg-white/5 border border-white/10 rounded-2xl p-5 sm:p-6">
@@ -119,11 +116,7 @@ const FarmerDashboardPage = () => {
         </div>
 
       </div>
-
-      {/* MAIN GRID */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-
-        {/* CHART */}
         <div className="xl:col-span-2 bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6 overflow-x-auto">
           <h3 className="text-gray-300 font-semibold mb-4">
             Revenue (Last 30 Days)
@@ -145,8 +138,6 @@ const FarmerDashboardPage = () => {
             />
           </div>
         </div>
-
-        {/* RECENT SALES */}
         <div className="bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6">
           <h3 className="text-gray-300 font-semibold mb-4">
             Recent Sales

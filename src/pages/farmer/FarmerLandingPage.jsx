@@ -4,8 +4,6 @@ import Button from '../../components/common/Button';
 const FarmerLandingPage = ({ onNavigate }) => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#050b08] text-white">
-
-      {/* BACKGROUND */}
       <div
         className="absolute inset-0"
         style={{
@@ -18,12 +16,8 @@ const FarmerLandingPage = ({ onNavigate }) => {
 
       <div className="absolute inset-0 bg-black/75" />
       <div className="absolute inset-0 bg-gradient-to-br from-[#050b08] via-[#050b08]/80 to-transparent" />
-
-      {/* FLOATING GLOWS */}
       <div className="absolute top-[-120px] left-[-120px] w-[380px] h-[380px] bg-emerald-500/20 blur-[120px] rounded-full" />
       <div className="absolute bottom-[-150px] right-[-120px] w-[420px] h-[420px] bg-lime-300/10 blur-[130px] rounded-full" />
-
-      {/* NAV */}
       <nav className="relative z-20 flex items-center justify-between px-5 sm:px-10 py-6">
 
         <div className="flex items-center gap-3">
@@ -53,16 +47,10 @@ const FarmerLandingPage = ({ onNavigate }) => {
         </div>
 
       </nav>
-
-      {/* HERO */}
       <section className="relative z-10 min-h-[85vh] flex items-center px-5 sm:px-10">
 
         <div className="max-w-6xl mx-auto w-full grid lg:grid-cols-2 gap-14 items-center">
-
-          {/* LEFT */}
           <div>
-
-            {/* ✅ BACK TO HOME BUTTON (ADDED HERE) */}
             <div className="mb-6">
               <button
                 onClick={() => onNavigate('/')}
@@ -90,8 +78,6 @@ const FarmerLandingPage = ({ onNavigate }) => {
             <p className="mt-5 text-gray-300 text-sm sm:text-base max-w-xl">
               Manage your livestock listings, receive orders, and grow your farming business directly from buyers across the region.
             </p>
-
-            {/* ACTION BUTTONS */}
             <div className="mt-7 flex flex-col sm:flex-row gap-3">
 
               <Button
@@ -109,8 +95,6 @@ const FarmerLandingPage = ({ onNavigate }) => {
               </Button>
 
             </div>
-
-            {/* SMALL FEATURES */}
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
 
               <div className="bg-white/5 border border-white/10 rounded-xl p-4">
@@ -134,8 +118,6 @@ const FarmerLandingPage = ({ onNavigate }) => {
             </div>
 
           </div>
-
-          {/* RIGHT VISUAL CARD */}
           <div className="relative hidden lg:flex justify-center">
 
             <div className="absolute w-[500px] h-[500px] bg-emerald-500/10 blur-[120px] rounded-full" />

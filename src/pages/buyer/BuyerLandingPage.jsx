@@ -16,8 +16,6 @@ const BuyerLandingPage = ({ onNavigate }) => {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#07120c] text-white">
-
-      {/* BACKGROUND */}
       <div
         className="absolute inset-0"
         style={{
@@ -29,12 +27,8 @@ const BuyerLandingPage = ({ onNavigate }) => {
       />
       <div className="absolute inset-0 bg-black/70" />
       <div className="absolute inset-0 bg-gradient-to-r from-[#07120c] via-[#07120c]/85 to-[#07120c]/40" />
-
-      {/* GLOW EFFECTS */}
       <div className="absolute top-[-120px] left-[-120px] w-[400px] h-[400px] bg-green-500/20 rounded-full blur-[120px]" />
       <div className="absolute bottom-[-120px] right-[-100px] w-[400px] h-[400px] bg-lime-300/10 rounded-full blur-[120px]" />
-
-      {/* NAV */}
       <nav className="relative z-20 flex items-center justify-between px-4 sm:px-6 lg:px-12 py-5">
 
         <div className="flex items-center gap-3">
@@ -67,13 +61,8 @@ const BuyerLandingPage = ({ onNavigate }) => {
         </div>
 
       </nav>
-
-      {/* HERO */}
       <section className="relative z-10 min-h-[88vh] flex items-center px-4 sm:px-6 lg:px-12 py-10">
-
         <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center">
-
-          {/* LEFT */}
           <div className="text-center lg:text-left">
 
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-400/20">
@@ -96,12 +85,8 @@ const BuyerLandingPage = ({ onNavigate }) => {
             <p className="mt-5 text-sm sm:text-lg text-gray-300 max-w-xl mx-auto lg:mx-0">
               Farmart connects you with verified farmers for safe, fast livestock trading.
             </p>
-
-            {/* 🔥 TOGGLE SWITCH */}
             <div className="flex justify-center lg:justify-start mt-6">
-
               <div className="flex items-center bg-white/5 border border-white/10 rounded-full p-1 backdrop-blur-md">
-
                 <button
                   onClick={() => handleTabChange('buyer')}
                   className={`px-5 py-2 text-sm rounded-full transition-all duration-300 ${
@@ -126,8 +111,6 @@ const BuyerLandingPage = ({ onNavigate }) => {
 
               </div>
             </div>
-
-            {/* ACTION BUTTONS */}
             <div className="mt-7 flex flex-col sm:flex-row gap-3">
 
               <Button
@@ -145,8 +128,6 @@ const BuyerLandingPage = ({ onNavigate }) => {
               </Button>
 
             </div>
-
-            {/* STATS */}
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
 
               <div className="bg-white/5 border border-white/10 rounded-xl p-4">
@@ -170,8 +151,6 @@ const BuyerLandingPage = ({ onNavigate }) => {
             </div>
 
           </div>
-
-          {/* RIGHT IMAGE */}
           <div className="relative hidden lg:flex justify-center items-center">
 
             <div className="absolute w-[550px] h-[550px] rounded-full bg-green-400/10 blur-[120px]" />
